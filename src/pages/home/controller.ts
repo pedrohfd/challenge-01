@@ -29,9 +29,24 @@ export const useHomeController = () => {
     setValue('description', '')
   }
 
+  const handleCompleteTask = (id: string) => {
+    setTasks((prevState) =>
+      prevState.map((task) =>
+        task.id === id ? { ...task, isDone: !task.isDone } : task,
+      ),
+    )
+  }
+
   const handleDeleteTask = (id: string) => {
     setTasks((prevState) => prevState.filter((task) => task.id !== id))
   }
 
-  return { tasks, handleCreateTask, control, handleSubmit, handleDeleteTask }
+  return {
+    tasks,
+    handleCreateTask,
+    control,
+    handleSubmit,
+    handleDeleteTask,
+    handleCompleteTask,
+  }
 }

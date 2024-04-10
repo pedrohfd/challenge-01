@@ -8,8 +8,14 @@ import { Controller } from 'react-hook-form'
 import { TrashIcon } from '@/assets/icons/trash'
 
 export const Home = () => {
-  const { tasks, handleCreateTask, control, handleSubmit, handleDeleteTask } =
-    useHomeController()
+  const {
+    tasks,
+    handleCreateTask,
+    control,
+    handleSubmit,
+    handleDeleteTask,
+    handleCompleteTask,
+  } = useHomeController()
 
   return (
     <main className="h-screen bg-gray-600">
@@ -39,7 +45,7 @@ export const Home = () => {
               Tarefas criadas
             </p>
             <p className="flex w-[1.57rem] items-center justify-center rounded-full bg-gray-400 px-2 py-0.5 font-inter text-xs font-bold text-gray-200">
-              0
+              {tasks.length}
             </p>
           </span>
 
@@ -47,8 +53,13 @@ export const Home = () => {
             <p className="font-inter text-sm font-bold text-violet-500">
               Concluídas
             </p>
-            <p className="flex w-[1.57rem] items-center justify-center rounded-full bg-gray-400 px-2 py-0.5 font-inter text-xs font-bold text-gray-200">
-              0
+            <p
+              data-completed={tasks.length === 0 && 0}
+              className="flex items-center justify-center rounded-full bg-gray-400 px-2 py-0.5 font-inter text-xs font-bold text-gray-200 data-[completed=true]:w-[1.57rem]"
+            >
+              {tasks.length === 0 && 0}
+              {tasks.length > 0 &&
+                `${tasks.filter((task) => task.isDone).length} de ${tasks.length}`}
             </p>
           </span>
         </section>
@@ -79,13 +90,23 @@ export const Home = () => {
                 className="flex w-full items-center justify-between gap-3 rounded-lg border border-gray-400 bg-gray-500 p-4 font-inter text-sm font-normal text-gray-100 shadow-md "
               >
                 <span className="flex items-center gap-3">
-                  <Checkbox id={task.id?.toString()} />
-                  <label htmlFor={task.id?.toString()}>
+                  <Checkbox
+                    id={task.id?.toString()}
+                    onClick={() => handleCompleteTask(String(task.id))}
+                  />
+                  <label
+                    htmlFor={task.id?.toString()}
+                    data-checked={task.isDone}
+                    className="data-[checked=true]:text-gray-300 data-[checked=true]:line-through"
+                  >
                     {task.description}
                   </label>
                 </span>
 
-                <button onClick={() => handleDeleteTask(String(task.id))}>
+                <button
+                  className="rounded-lg text-gray-300 transition-colors hover:bg-gray-400 hover:text-red"
+                  onClick={() => handleDeleteTask(String(task.id))}
+                >
                   <TrashIcon />
                 </button>
               </div>
